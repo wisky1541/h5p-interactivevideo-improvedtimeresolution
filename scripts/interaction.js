@@ -490,7 +490,7 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
         isShownAsButton = false;
       }
       if (player.editor === undefined) {
-        dnbElement = player.dnb.add($interaction, {dnbElement: dnbElement, disableContextMenu: true});
+        dnbElement = player.dnb.add($interaction, undefined, {dnbElement: dnbElement, disableContextMenu: true});
       } else {
         // Pause video when interaction is focused
         $interaction.focus(function () {
@@ -587,8 +587,12 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
      * @param {number} height in ems
      */
     self.setSize = function (width, height) {
-      parameters.width = width;
-      parameters.height = height;
+      if (width) {
+        parameters.width = width;
+      }
+      if (height) {
+        parameters.height = height;
+      }
 
       H5P.trigger(instance, 'resize');
     };
@@ -713,7 +717,16 @@ H5P.InteractiveVideoInteraction = (function ($, EventDispatcher) {
     };
 
     /**
+     * Create clipboard data object.
+     * @returns {object}
+     */
+    self.getClipboardData = function () {
+      return H5P.DragNBar.clipboardify(H5PEditor.InteractiveVideo.clipboardKey, parameters, 'action');
+    };
+
+    /**
      * Resize to fit wrapper so icon does not overflow
+     * @param {H5P.jQuery} $wrapper
      */
     self.repositionToWrapper = function ($wrapper) {
       if ($interaction && isShownAsButton) {
